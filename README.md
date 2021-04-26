@@ -7,10 +7,12 @@ starts in VSCode.
 
 ```
 haxelib newrepo
-haxelib install
+haxelib install compile.hxml
 npm i
 npm start
 ```
+
+Open http://localhost:3000
 
 ### Possible problems
 
