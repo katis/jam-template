@@ -40,7 +40,7 @@ app.get("/reload-events", (_req, res) => {
     Connection: "keep-alive",
   });
 
-  const intervalSub = rx.interval(1000).subscribe(() => {
+  const pingSub = rx.interval(1000).subscribe(() => {
     res.write(": ping\n\n");
   });
 
@@ -49,7 +49,7 @@ app.get("/reload-events", (_req, res) => {
   });
 
   res.once("close", () => {
-    intervalSub.unsubscribe();
+    pingSub.unsubscribe();
     reloadSub.unsubscribe();
   });
 });
