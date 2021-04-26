@@ -1,0 +1,16 @@
+{
+  "name": "jam-template",
+  "version": "1.0.0",
+  "description": "Gamejam Haxe Heaps template",
+  "main": "src/Main.hx",
+  "scripts": {
+    "start": "node dev-server.js"
+  },
+  "author": "Joni Katajamäki",
+  "license": "MIT",
+  "devDependencies": {
+    "chokidar": "^3.5.1",
+    "express": "^4.17.1",
+    "rxjs": "^6.6.7"
+  }
+}
