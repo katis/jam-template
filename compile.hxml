@@ -1,6 +1,6 @@
 -cp src
 -lib heaps:1.9.1
 -D js-es=6
--js public/js/hello.js
+-js public/js/game.js
 -main Main
 -debug
