@@ -1,0 +1,10 @@
+{
+  "wrapping": {
+    "methodChain": {
+      "defaultWrap": "onePerLine",
+      "defaultLocation": "afterLast",
+      "rules": []
+    },
+    "maxLineLength": 100
+  }
+}

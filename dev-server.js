@@ -6,28 +6,33 @@ const childProcess = require("child_process");
 const express = require("express");
 
 const HAXE_SERVER_PORT = 6000;
+const SRC = path.join(__dirname, "src");
 
 const compile = () =>
-  new Promise((resolve) => {
-    childProcess.exec(`haxe --connect ${HAXE_SERVER_PORT} compile.hxml`, () =>
-      resolve()
+  new rx.Observable((sub) => {
+    childProcess.exec(
+      `haxe --connect ${HAXE_SERVER_PORT} compile.hxml`,
+      (error) => {
+        if (error) {
+          sub.error(error);
+        } else {
+          sub.next("OK");
+          sub.complete();
+        }
+      }
     );
   });
 
-const watchSrc = chokidar.watch(path.join(__dirname, "src"), {
-  depth: 20,
-});
+const reloads = new rx.Subject();
 
-const watchPublic = chokidar.watch(path.join(__dirname, "public"), {
-  depth: 2,
-});
-
-const srcChanges = rx.fromEvent(watchSrc, "all").pipe(op.debounceTime(200));
-const publicChanges = rx
-  .fromEvent(watchPublic, "all")
-  .pipe(op.debounceTime(50));
-
-srcChanges.pipe(op.concatMap(() => rx.from(compile()))).subscribe(() => {});
+const watchSrc = chokidar.watch(SRC, { depth: 20 });
+const compilations = rx
+  .fromEvent(watchSrc, "all")
+  .pipe(op.debounceTime(100))
+  .pipe(op.startWith("START"))
+  .pipe(op.tap(() => "COMPILED!"))
+  .pipe(op.exhaustMap(() => compile().pipe(op.catchError(() => rx.EMPTY))));
+compilations.subscribe(reloads);
 
 const app = express();
 
@@ -44,7 +49,7 @@ app.get("/reload-events", (_req, res) => {
     res.write(": ping\n\n");
   });
 
-  const reloadSub = publicChanges.subscribe(() => {
+  const reloadSub = reloads.subscribe(() => {
     res.write("event: reload\ndata: 0\n\n");
   });
 
