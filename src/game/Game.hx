@@ -1,6 +1,6 @@
 package game;
 
-import game.CollisionSystem;
+import game.collision.CollisionSystem;
 import game.RingSystem;
 import game.BasicComponents;
 import game.Vec2;
@@ -13,14 +13,13 @@ class Game extends hxd.App {
 	final world = new World();
 	final balls = new EntitySet<Ball>();
 	final rings = new EntitySet<Ring>();
-	final map = new Grid(128);
 	var tf:h2d.Text;
 
 	override public function init() {
 		this.tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
 
 		// Create systems
-		final collisionSystem = new CollisionSystem(256);
+		final collisionSystem = new CollisionSystem(s2d, 96, 20, 20);
 		final spriteSystem = new SpriteSystem(s2d);
 		final ringSystem = new RingSystem(hxd.Res.images.ringPart
 			.toTile()
@@ -55,7 +54,7 @@ class Game extends hxd.App {
 
 	function initEntities() {
 		final playerTile = hxd.Res.images.player.toTile();
-		for (_ in 0...1000) {
+		for (_ in 0...3200) {
 			balls.add({
 				sprite: new SpriteElement(playerTile),
 				transform: {
