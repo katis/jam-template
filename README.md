@@ -1,4 +1,4 @@
-## Dev
+## Game jam template using Haxe
 
 Use VSCode
 
